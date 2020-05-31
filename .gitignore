@@ -394,4 +394,5 @@ testem.log
 Thumbs.db
 
 # Database Files
+*.db
 *.db*
