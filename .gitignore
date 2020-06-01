@@ -396,3 +396,6 @@ Thumbs.db
 # Database Files
 *.db
 *.db*
+
+# App Settings File
+appsettings.json
