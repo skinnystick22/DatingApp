@@ -32,9 +32,9 @@ namespace API.Controllers
 
             if (await _repository.UserExists(userForRegisterDto.Username))
                 return BadRequest("Username already exists");
-            
+
             var userToCreate = new User {Username = userForRegisterDto.Username};
-            
+
             var createdUser = await _repository.Register(userToCreate, userForRegisterDto.Password);
 
             return StatusCode(201); // TODO: Will return Route
@@ -53,18 +53,19 @@ namespace API.Controllers
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepo.Username)
             };
-            
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-            
+
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            
+
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = credentials
             };
-            
+
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
