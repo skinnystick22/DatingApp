@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using API.Controllers;
 using API.Dtos;
 using API.Models;
 using AutoMapper;
@@ -24,6 +25,8 @@ namespace API.Helpers
             
             CreateMap<Photo, PhotosForDetailedDto>();
             CreateMap<UserForUpdateDto, User>();
+            CreateMap<Photo, PhotoForReturnDto>();
+            CreateMap<PhotoForCreationDto, Photo>();
         }
     }
 }
