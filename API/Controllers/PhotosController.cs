@@ -35,8 +35,9 @@ namespace API.Controllers
             _cloudinary = new Cloudinary(account);
         }
 
+        // GET api/users/{userId}/photos/{photoId}
         [HttpGet("{id}", Name = "GetPhoto")]
-        public async Task<IActionResult> GetPhoto(int id)
+        public async Task<IActionResult> GetPhotoAsync(int id)
         {
             var photoFromRepository = await _repository.GetPhoto(id);
             var photo = _mapper.Map<PhotoForReturnDto>(photoFromRepository);
@@ -44,9 +45,9 @@ namespace API.Controllers
             return Ok(photo);
         }
 
-
+        // POST api/users/{userId}/photos
         [HttpPost]
-        public async Task<IActionResult> AddPhotoForUser(int userId, [FromForm] PhotoForCreationDto photoForCreationDto)
+        public async Task<IActionResult> AddPhotoForUserAsync(int userId, [FromForm] PhotoForCreationDto photoForCreationDto)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
@@ -88,8 +89,9 @@ namespace API.Controllers
             return BadRequest("Could not add the photo");
         }
 
+        // POST api/users/{userId}/photos/{photoId/setMain}
         [HttpPost("{id}/setMain")]
-        public async Task<IActionResult> SetMainPhoto(int userId, int id)
+        public async Task<IActionResult> SetMainPhotoAsync(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
@@ -113,8 +115,9 @@ namespace API.Controllers
             return BadRequest("Could not set photo to main");
         }
 
+        // DELETE api/users/{userId}/photos/{photoId}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePhoto(int userId, int id)
+        public async Task<IActionResult> DeletePhotoAsync(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
@@ -139,7 +142,7 @@ namespace API.Controllers
 
             if (photoFromRepository.PublicId == null)
                 _repository.Delete(photoFromRepository);
-            
+
             if (await _repository.SaveAll())
                 return Ok();
 

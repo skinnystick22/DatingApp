@@ -21,16 +21,16 @@ namespace API.Controllers
         // GET api/values
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetValues()
+        public async Task<IActionResult> GetValuesAsync()
         {
             var values = await _context.Values.ToListAsync();
             return Ok(values);
         }
 
-        // GET api/values/5
+        // GET api/values/{valueId}
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetValue(int id)
+        public async Task<IActionResult> GetValueAsync(int id)
         {
             var value = await _context.Values.FirstOrDefaultAsync(v => v.Id == id);
             return Ok(value);

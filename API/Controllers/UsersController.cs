@@ -4,12 +4,14 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Data;
 using API.Dtos;
+using API.Helpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -26,7 +28,7 @@ namespace API.Controllers
 
         // GET api/users
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsersAsync()
         {
             var users = await _repository.GetUsers();
 
@@ -35,9 +37,9 @@ namespace API.Controllers
             return Ok(usersToReturn);
         }
 
-        // GET api/users/5
+        // GET api/users/{userId}
         [HttpGet("{id}", Name = "GetUser")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetUserAsync(int id)
         {
             var user = await _repository.GetUser(id);
 
@@ -46,9 +48,9 @@ namespace API.Controllers
             return Ok(userToReturn);
         }
         
-        // PUT /api/users/5
+        // PUT /api/users/{userId}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+        public async Task<IActionResult> UpdateUserAsync(int id, UserForUpdateDto userForUpdateDto)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
