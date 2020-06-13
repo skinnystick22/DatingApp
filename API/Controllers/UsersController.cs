@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.Data;
 using API.Dtos;
 using API.Helpers;
+using API.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +46,7 @@ namespace API.Controllers
             return Ok(usersToReturn);
         }
 
-        // GET api/users/{userId}
+        // GET api/users/{id}
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
@@ -55,7 +56,7 @@ namespace API.Controllers
             return Ok(userToReturn);
         }
 
-        // PUT /api/users/{userId}
+        // PUT /api/users/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
         {
@@ -70,6 +71,33 @@ namespace API.Controllers
                 return NoContent();
 
             throw new Exception($"Updating user: {id} failed on save");
+        }
+
+        // POST /api/users/{id}/like/{recipientId}
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<IActionResult> LikeUser(int id, int recipientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var like = await _repository.GetLike(id, recipientId);
+            if (like != null)
+                return BadRequest("You already like this user.");
+
+            if (await _repository.GetUser(recipientId) == null)
+                return NotFound();
+            
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recipientId
+            };
+            _repository.Add(like);
+
+            if (await _repository.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to Like user");
         }
     }
 }
