@@ -21,7 +21,7 @@ namespace API.Controllers
         // GET api/values
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetValuesAsync()
+        public async Task<IActionResult> GetValues()
         {
             var values = await _context.Values.ToListAsync();
             return Ok(values);
@@ -30,7 +30,7 @@ namespace API.Controllers
         // GET api/values/{valueId}
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetValueAsync(int id)
+        public async Task<IActionResult> GetValue(int id)
         {
             var value = await _context.Values.FirstOrDefaultAsync(v => v.Id == id);
             return Ok(value);

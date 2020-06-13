@@ -30,7 +30,7 @@ namespace API.Controllers
 
         // POST api/auth/register
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync(UserForRegisterDto userForRegisterDto)
+        public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
 
@@ -46,7 +46,7 @@ namespace API.Controllers
 
         // POST api/auth/login
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAsync(UserForLoginDto userForLoginDto)
+        public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
             var userFromRepo = await _repository.Login(userForLoginDto.Username, userForLoginDto.Password);
 
