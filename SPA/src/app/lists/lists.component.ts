@@ -28,7 +28,7 @@ export class ListsComponent implements OnInit {
     this.likesParam = 'Likers';
   }
 
-  pagedChanged(event: any): void {
+  pageChanged(event: any): void {
     this.pagination.currentPage = event.page;
     this.loadUsers();
   }

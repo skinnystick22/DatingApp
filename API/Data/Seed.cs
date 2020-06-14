@@ -2,6 +2,7 @@
 using System.Linq;
 using API.Models;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace API.Data
 {
@@ -11,7 +12,7 @@ namespace API.Data
         {
             if (!context.Users.Any())
             {
-                var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
+                var userData = File.ReadAllText("Data/UserSeedData.json");
                 var users = JsonConvert.DeserializeObject<List<User>>(userData);
                 foreach (var user in users)
                 {
@@ -28,7 +29,7 @@ namespace API.Data
                 context.SaveChanges();
             }
         }
-        
+
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
@@ -37,6 +38,5 @@ namespace API.Data
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
-
     }
 }
