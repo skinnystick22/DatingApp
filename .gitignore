@@ -393,9 +393,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Database Files
-*.db
-*.db*
-
-# App Settings File
-appsettings.json
+# wwwroot Folder
+wwwroot/
