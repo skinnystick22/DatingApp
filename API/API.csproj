@@ -6,30 +6,48 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-      <PackageReference Include="CloudinaryDotNet" Version="1.11.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
-      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.6.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.6.0" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+        <PackageReference Include="CloudinaryDotNet" Version="1.11.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.5" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.6.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.6.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Content Update="Data\UserSeedData.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
+        <Content Update="Data\UserSeedData.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations" />
+        <Folder Include="Migrations" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\3rdpartylicenses.txt" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\user.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
+      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.1e59d2330b4c6deb84b3.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.20fd1704ea223900efa9.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.8b43027f47b20503057d.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.f691f37e57f04c152e23.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\index.html" />
+      <_ContentIncludedByDefault Remove="wwwroot\main-es2015.609ee35a34bd81d80435.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\main-es5.609ee35a34bd81d80435.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\polyfills-es2015.8824ee8e7376ddf58659.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\polyfills-es5.b6628c0378073d20b94e.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\runtime-es2015.cf16196b22f7fa750d68.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\runtime-es5.cf16196b22f7fa750d68.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\styles.2f0f873c677392e5930e.css" />
+    </ItemGroup>
 
 </Project>
