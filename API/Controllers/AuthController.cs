@@ -42,7 +42,9 @@ namespace API.Controllers
             var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
             if (result.Succeeded)
             {
-                return CreatedAtRoute("GetUser", new {Controller = "Users", Id = userToCreate.Id}, userToReturn);   
+                result = await _userManager.AddToRoleAsync(userToCreate, "Member");
+                if (result.Succeeded)
+                    return CreatedAtRoute("GetUser", new {Controller = "Users", Id = userToCreate.Id}, userToReturn);   
             }
 
             return BadRequest(result.Errors);

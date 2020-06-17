@@ -395,3 +395,8 @@ Thumbs.db
 
 # wwwroot Folder
 wwwroot/
+
+# Database File
+*.db
+*.db-shm
+*.db-wal
