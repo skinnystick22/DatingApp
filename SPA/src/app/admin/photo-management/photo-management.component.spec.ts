@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PhotoManagementComponent } from './photo-management.component';
+import {PhotoManagementComponent} from './photo-management.component';
 
 describe('PhotoManagementComponent', () => {
   let component: PhotoManagementComponent;
@@ -8,9 +8,9 @@ describe('PhotoManagementComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PhotoManagementComponent ]
+      declarations: [PhotoManagementComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { RolesModalComponent } from './roles-modal.component';
+import {RolesModalComponent} from './roles-modal.component';
 
 describe('RolesModalComponent', () => {
   let component: RolesModalComponent;
@@ -8,9 +8,9 @@ describe('RolesModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RolesModalComponent ]
+      declarations: [RolesModalComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

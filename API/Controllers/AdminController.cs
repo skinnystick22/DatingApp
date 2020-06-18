@@ -22,14 +22,15 @@ namespace API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly Cloudinary _cloudinary;
 
-        public AdminController(DataContext context, UserManager<User> userManager, IOptions<CloudinarySettings> cloudinaryConfiguration)
+        public AdminController(DataContext context, UserManager<User> userManager,
+            IOptions<CloudinarySettings> cloudinaryConfiguration)
         {
             _context = context;
             _userManager = userManager;
 
             var account = new Account(cloudinaryConfiguration.Value.CloudName, cloudinaryConfiguration.Value.ApiKey,
                 cloudinaryConfiguration.Value.ApiSecret);
-            
+
             _cloudinary = new Cloudinary(account);
         }
 

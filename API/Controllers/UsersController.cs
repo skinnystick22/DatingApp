@@ -7,7 +7,6 @@ using API.Dtos;
 using API.Helpers;
 using API.Models;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -28,15 +27,15 @@ namespace API.Controllers
 
         // GET api/users
         [HttpGet]
-        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
+        public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var userFromRepository = await _repository.GetUser(currentUserId, true);
             userParams.UserId = currentUserId;
-            
+
             if (string.IsNullOrEmpty(userParams.Gender))
                 userParams.Gender = userFromRepository.Gender == "male" ? "female" : "male";
-            
+
             var users = await _repository.GetUsers(userParams);
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
@@ -86,7 +85,7 @@ namespace API.Controllers
 
             if (await _repository.GetUser(recipientId, true) == null)
                 return NotFound();
-            
+
             like = new Like
             {
                 LikerId = id,

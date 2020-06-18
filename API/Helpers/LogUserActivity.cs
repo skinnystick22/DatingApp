@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace API.Helpers
 {
-    public class LogUserActivity: IAsyncActionFilter
+    public class LogUserActivity : IAsyncActionFilter
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {

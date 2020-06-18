@@ -3,13 +3,13 @@
 
   <div class="tab-panel">
     <tabset class="member-tabset">
-      <tab heading="User Management" *appHasRole="['Admin']">
+      <tab *appHasRole="['Admin']" heading="User Management">
         <div class="container">
           <app-user-management></app-user-management>
         </div>
       </tab>
 
-      <tab heading="Photo Management" *appHasRole="['Admin', 'Moderator']">
+      <tab *appHasRole="['Admin', 'Moderator']" heading="Photo Management">
         <app-photo-management></app-photo-management>
       </tab>
     </tabset>

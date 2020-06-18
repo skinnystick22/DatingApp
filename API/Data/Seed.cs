@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using API.Models;
-using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
+using API.Models;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace API.Data
 {
@@ -34,7 +34,7 @@ namespace API.Data
                 {
                     user.Photos.SingleOrDefault().IsApproved = true;
                     userManager.CreateAsync(user, "password").Wait();
-                    userManager.AddToRoleAsync(user, "Member");
+                    userManager.AddToRoleAsync(user, "Member").Wait();
                 }
 
                 // Create Admin user
@@ -45,7 +45,7 @@ namespace API.Data
                 {
                     var admin = userManager.FindByNameAsync("Admin").Result;
                     var adminRoles = new string[] {"Admin", "Moderator"};
-                    userManager.AddToRolesAsync(admin, adminRoles);
+                    userManager.AddToRolesAsync(admin, adminRoles).Wait();
                 }
             }
         }

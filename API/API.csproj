@@ -30,22 +30,22 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\3rdpartylicenses.txt" />
-      <_ContentIncludedByDefault Remove="wwwroot\assets\user.png" />
-      <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
-      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.1e59d2330b4c6deb84b3.ttf" />
-      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.20fd1704ea223900efa9.woff2" />
-      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.8b43027f47b20503057d.eot" />
-      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg" />
-      <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.f691f37e57f04c152e23.woff" />
-      <_ContentIncludedByDefault Remove="wwwroot\index.html" />
-      <_ContentIncludedByDefault Remove="wwwroot\main-es2015.609ee35a34bd81d80435.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\main-es5.609ee35a34bd81d80435.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\polyfills-es2015.8824ee8e7376ddf58659.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\polyfills-es5.b6628c0378073d20b94e.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\runtime-es2015.cf16196b22f7fa750d68.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\runtime-es5.cf16196b22f7fa750d68.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\styles.2f0f873c677392e5930e.css" />
+        <_ContentIncludedByDefault Remove="wwwroot\3rdpartylicenses.txt" />
+        <_ContentIncludedByDefault Remove="wwwroot\assets\user.png" />
+        <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
+        <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.1e59d2330b4c6deb84b3.ttf" />
+        <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.20fd1704ea223900efa9.woff2" />
+        <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.8b43027f47b20503057d.eot" />
+        <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg" />
+        <_ContentIncludedByDefault Remove="wwwroot\fontawesome-webfont.f691f37e57f04c152e23.woff" />
+        <_ContentIncludedByDefault Remove="wwwroot\index.html" />
+        <_ContentIncludedByDefault Remove="wwwroot\main-es2015.609ee35a34bd81d80435.js" />
+        <_ContentIncludedByDefault Remove="wwwroot\main-es5.609ee35a34bd81d80435.js" />
+        <_ContentIncludedByDefault Remove="wwwroot\polyfills-es2015.8824ee8e7376ddf58659.js" />
+        <_ContentIncludedByDefault Remove="wwwroot\polyfills-es5.b6628c0378073d20b94e.js" />
+        <_ContentIncludedByDefault Remove="wwwroot\runtime-es2015.cf16196b22f7fa750d68.js" />
+        <_ContentIncludedByDefault Remove="wwwroot\runtime-es5.cf16196b22f7fa750d68.js" />
+        <_ContentIncludedByDefault Remove="wwwroot\styles.2f0f873c677392e5930e.css" />
     </ItemGroup>
 
 </Project>

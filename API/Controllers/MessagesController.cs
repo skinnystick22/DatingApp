@@ -7,7 +7,6 @@ using API.Dtos;
 using API.Helpers;
 using API.Models;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -43,11 +42,11 @@ namespace API.Controllers
 
         // GET api/users/{userId}/messages
         [HttpGet]
-        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery]MessageParams messageParams)
+        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery] MessageParams messageParams)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
-            
+
             messageParams.UserId = userId;
 
             var messagesFromRepository = await _repository.GetMessagesForUser(messageParams);
@@ -58,7 +57,7 @@ namespace API.Controllers
 
             return Ok(messages);
         }
-        
+
         // GET api/users/{userId}/messages/thread/{recipientId}
         [HttpGet("thread/{recipientId}")]
         public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
@@ -77,7 +76,7 @@ namespace API.Controllers
         public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDto messageForCreationDto)
         {
             var sender = await _repository.GetUser(userId, false);
-            
+
             if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
@@ -112,13 +111,13 @@ namespace API.Controllers
 
             if (messageFromRepository.RecipientId == userId)
                 messageFromRepository.RecipientDeleted = true;
-            
+
             if (messageFromRepository.SenderDeleted && messageFromRepository.RecipientDeleted)
                 _repository.Delete(messageFromRepository);
 
             if (await _repository.SaveAll())
                 return NoContent();
-            
+
             throw new Exception("Error deleting the message");
         }
 

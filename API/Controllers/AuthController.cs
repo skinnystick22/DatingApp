@@ -25,7 +25,8 @@ namespace API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AuthController(IConfiguration configuration, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
+        public AuthController(IConfiguration configuration, IMapper mapper, UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _configuration = configuration;
             _mapper = mapper;
@@ -44,7 +45,7 @@ namespace API.Controllers
             {
                 result = await _userManager.AddToRoleAsync(userToCreate, "Member");
                 if (result.Succeeded)
-                    return CreatedAtRoute("GetUser", new {Controller = "Users", Id = userToCreate.Id}, userToReturn);   
+                    return CreatedAtRoute("GetUser", new {Controller = "Users", Id = userToCreate.Id}, userToReturn);
             }
 
             return BadRequest(result.Errors);
@@ -84,7 +85,7 @@ namespace API.Controllers
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            
+
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

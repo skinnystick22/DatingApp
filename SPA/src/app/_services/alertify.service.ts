@@ -13,7 +13,8 @@ export class AlertifyService {
     alertify.confirm(message, (e: any) => {
       if (e) {
         okCallback();
-      } else {}
+      } else {
+      }
     });
   }
 

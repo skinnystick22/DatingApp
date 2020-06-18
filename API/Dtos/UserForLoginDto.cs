@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace API.Dtos
+﻿namespace API.Dtos
 {
     public class UserForLoginDto
     {

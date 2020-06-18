@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PhotoEditorComponent } from './photo-editor.component';
+import {PhotoEditorComponent} from './photo-editor.component';
 
 describe('PhotoEditorComponent', () => {
   let component: PhotoEditorComponent;
@@ -8,9 +8,9 @@ describe('PhotoEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PhotoEditorComponent ]
+      declarations: [PhotoEditorComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

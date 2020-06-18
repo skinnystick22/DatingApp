@@ -15,7 +15,8 @@ export class MemberMessagesComponent implements OnInit {
   messages: Message[];
   newMessage: any = {};
 
-  constructor(private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
+  constructor(private userService: UserService, private authService: AuthService, private alertify: AlertifyService) {
+  }
 
   ngOnInit(): void {
     this.loadMessages();
@@ -32,10 +33,10 @@ export class MemberMessagesComponent implements OnInit {
         }
       }))
       .subscribe(messages => {
-      this.messages = messages;
-    }, error => {
-      this.alertify.error(error);
-    });
+        this.messages = messages;
+      }, error => {
+        this.alertify.error(error);
+      });
   }
 
   sendMessage() {

@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MemberMessagesComponent } from './member-messages.component';
+import {MemberMessagesComponent} from './member-messages.component';
 
 describe('MemberMessagesComponent', () => {
   let component: MemberMessagesComponent;
@@ -8,9 +8,9 @@ describe('MemberMessagesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MemberMessagesComponent ]
+      declarations: [MemberMessagesComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

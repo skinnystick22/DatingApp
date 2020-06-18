@@ -32,7 +32,7 @@ namespace API
                     logger.LogError(e, "An error occured during migration.");
                 }
             }
-            
+
             host.Run();
         }
 

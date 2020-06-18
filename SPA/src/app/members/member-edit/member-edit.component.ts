@@ -16,15 +16,15 @@ export class MemberEditComponent implements OnInit {
   user: User;
   photoUrl: string;
 
+  constructor(private userService: UserService, private route: ActivatedRoute, private alertify: AlertifyService,
+              private authService: AuthService) {
+  }
+
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
     if (this.editForm.dirty) {
       $event.returnValue = true;
     }
-  }
-
-  constructor(private userService: UserService, private route: ActivatedRoute, private alertify: AlertifyService,
-              private authService: AuthService) {
   }
 
   ngOnInit(): void {
