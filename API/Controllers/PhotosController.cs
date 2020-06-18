@@ -51,7 +51,7 @@ namespace API.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var userFromRepository = await _repository.GetUser(userId);
+            var userFromRepository = await _repository.GetUser(userId, true);
             var file = photoForCreationDto.File;
             var uploadResult = new ImageUploadResult();
 
@@ -95,7 +95,7 @@ namespace API.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var user = await _repository.GetUser(userId);
+            var user = await _repository.GetUser(userId, true);
 
             if (user.Photos.All(p => p.Id != id))
                 return Unauthorized();
@@ -121,7 +121,7 @@ namespace API.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var user = await _repository.GetUser(userId);
+            var user = await _repository.GetUser(userId, true);
 
             if (user.Photos.All(p => p.Id != id))
                 return Unauthorized();

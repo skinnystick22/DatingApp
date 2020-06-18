@@ -31,7 +31,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var userFromRepository = await _repository.GetUser(currentUserId);
+            var userFromRepository = await _repository.GetUser(currentUserId, true);
             userParams.UserId = currentUserId;
             
             if (string.IsNullOrEmpty(userParams.Gender))
@@ -49,7 +49,8 @@ namespace API.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await _repository.GetUser(id);
+            var isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == id; // Returns the user Id
+            var user = await _repository.GetUser(id, isCurrentUser);
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
             return Ok(userToReturn);
@@ -62,7 +63,7 @@ namespace API.Controllers
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
-            var userFromRepository = await _repository.GetUser(id);
+            var userFromRepository = await _repository.GetUser(id, true);
 
             _mapper.Map(userForUpdateDto, userFromRepository);
 
@@ -83,7 +84,7 @@ namespace API.Controllers
             if (like != null)
                 return BadRequest("You already like this user.");
 
-            if (await _repository.GetUser(recipientId) == null)
+            if (await _repository.GetUser(recipientId, true) == null)
                 return NotFound();
             
             like = new Like

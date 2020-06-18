@@ -60,6 +60,8 @@ namespace API.Data
                 .HasOne(u => u.Recipient)
                 .WithMany(m => m.MessagesReceived)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
         }
     }
 }

@@ -32,6 +32,7 @@ namespace API.Data
 
                 foreach (var user in users)
                 {
+                    user.Photos.SingleOrDefault().IsApproved = true;
                     userManager.CreateAsync(user, "password").Wait();
                     userManager.AddToRoleAsync(user, "Member");
                 }
@@ -46,15 +47,6 @@ namespace API.Data
                     var adminRoles = new string[] {"Admin", "Moderator"};
                     userManager.AddToRolesAsync(admin, adminRoles);
                 }
-            }
-        }
-
-        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
     }
