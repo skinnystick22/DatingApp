@@ -24,12 +24,19 @@ namespace API.Controllers
             _repository = repository;
             _mapper = mapper;
         }
+        
+        private bool IsUnauthorized(int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return true;
+            return false;
+        }
 
         // GET api/users/{userId}/messages
         [HttpGet("{id}", Name = "GetMessage")]
         public async Task<IActionResult> GetMessage(int userId, int id)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId)) 
                 return Unauthorized();
 
             var messageFromRepository = await _repository.GetMessage(id);
@@ -39,12 +46,12 @@ namespace API.Controllers
 
             return Ok(messageFromRepository);
         }
-
+        
         // GET api/users/{userId}/messages
         [HttpGet]
         public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery] MessageParams messageParams)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId))
                 return Unauthorized();
 
             messageParams.UserId = userId;
@@ -62,7 +69,7 @@ namespace API.Controllers
         [HttpGet("thread/{recipientId}")]
         public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId))
                 return Unauthorized();
 
             var messageFromRepository = await _repository.GetMessageThread(userId, recipientId);
@@ -77,7 +84,7 @@ namespace API.Controllers
         {
             var sender = await _repository.GetUser(userId, false);
 
-            if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(sender.Id))
                 return Unauthorized();
 
             messageForCreationDto.SenderId = userId;
@@ -101,7 +108,7 @@ namespace API.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> DeleteMessage(int id, int userId)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId))
                 return Unauthorized();
 
             var messageFromRepository = await _repository.GetMessage(id);
@@ -124,7 +131,7 @@ namespace API.Controllers
         [HttpPost("{id}/read")]
         public async Task<IActionResult> MarkMessageAsRead(int userId, int id)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId))
                 return Unauthorized();
 
             var message = await _repository.GetMessage(id);

@@ -24,6 +24,13 @@ namespace API.Controllers
             _repository = repository;
             _mapper = mapper;
         }
+        
+        private bool IsUnauthorized(int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return true;
+            return false;
+        }
 
         // GET api/users
         [HttpGet]
@@ -46,10 +53,10 @@ namespace API.Controllers
 
         // GET api/users/{id}
         [HttpGet("{id}", Name = "GetUser")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetUser(int userId)
         {
-            var isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == id; // Returns the user Id
-            var user = await _repository.GetUser(id, isCurrentUser);
+            var isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == userId; // Returns the user Id
+            var user = await _repository.GetUser(userId, isCurrentUser);
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
             return Ok(userToReturn);
@@ -57,29 +64,29 @@ namespace API.Controllers
 
         // PUT /api/users/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+        public async Task<IActionResult> UpdateUser(int userId, UserForUpdateDto userForUpdateDto)
         {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId))
                 return Unauthorized();
 
-            var userFromRepository = await _repository.GetUser(id, true);
+            var userFromRepository = await _repository.GetUser(userId, true);
 
             _mapper.Map(userForUpdateDto, userFromRepository);
 
             if (await _repository.SaveAll())
                 return NoContent();
 
-            throw new Exception($"Updating user: {id} failed on save");
+            throw new Exception($"Updating user: {userId} failed on save");
         }
 
         // POST /api/users/{id}/like/{recipientId}
         [HttpPost("{id}/like/{recipientId}")]
-        public async Task<IActionResult> LikeUser(int id, int recipientId)
+        public async Task<IActionResult> LikeUser(int userId, int recipientId)
         {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId))
                 return Unauthorized();
 
-            var like = await _repository.GetLike(id, recipientId);
+            var like = await _repository.GetLike(userId, recipientId);
             if (like != null)
                 return BadRequest("You already like this user.");
 
@@ -88,7 +95,7 @@ namespace API.Controllers
 
             like = new Like
             {
-                LikerId = id,
+                LikerId = userId,
                 LikeeId = recipientId
             };
             _repository.Add(like);

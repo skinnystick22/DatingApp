@@ -32,6 +32,13 @@ namespace API.Controllers
                 _cloudinaryConfig.Value.ApiSecret);
             _cloudinary = new Cloudinary(account);
         }
+        
+        private bool IsUnauthorized(int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return true;
+            return false;
+        }
 
         // GET api/users/{userId}/photos/{photoId}
         [HttpGet("{id}", Name = "GetPhoto")]
@@ -47,7 +54,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPhotoForUser(int userId, [FromForm] PhotoForCreationDto photoForCreationDto)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId))
                 return Unauthorized();
 
             var userFromRepository = await _repository.GetUser(userId, true);
@@ -91,7 +98,7 @@ namespace API.Controllers
         [HttpPost("{id}/setMain")]
         public async Task<IActionResult> SetMainPhoto(int userId, int id)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId))
                 return Unauthorized();
 
             var user = await _repository.GetUser(userId, true);
@@ -117,7 +124,7 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePhoto(int userId, int id)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (IsUnauthorized(userId))
                 return Unauthorized();
 
             var user = await _repository.GetUser(userId, true);

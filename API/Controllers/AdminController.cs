@@ -97,8 +97,7 @@ namespace API.Controllers
         [HttpPost("approvePhoto/{photoId}")]
         public async Task<IActionResult> ApprovePhoto(int photoId)
         {
-            var photo = await _context.Photos.IgnoreQueryFilters()
-                .FirstOrDefaultAsync(p => p.Id == photoId);
+            var photo = await GetPhotoById(photoId);
 
             photo.IsApproved = true;
 
@@ -111,8 +110,7 @@ namespace API.Controllers
         [HttpPost("rejectPhoto/{photoId}")]
         public async Task<IActionResult> RejectPhoto(int photoId)
         {
-            var photo = await _context.Photos.IgnoreQueryFilters()
-                .FirstOrDefaultAsync(p => p.Id == photoId);
+            var photo = await GetPhotoById(photoId);
 
             if (photo.IsMain)
                 return BadRequest("You cannot reject the main photo.");
@@ -131,6 +129,13 @@ namespace API.Controllers
 
             await _context.SaveChangesAsync();
             return Ok();
+        }
+
+        private async Task<Photo> GetPhotoById(int photoId)
+        {
+            var photo = await _context.Photos.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(p => p.Id == photoId);
+            return photo;
         }
     }
 }
