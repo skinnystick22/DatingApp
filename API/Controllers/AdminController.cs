@@ -12,130 +12,129 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace API.Controllers
+namespace API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AdminController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AdminController : ControllerBase
+    private readonly DataContext _context;
+    private readonly UserManager<User> _userManager;
+    private readonly Cloudinary _cloudinary;
+
+    public AdminController(DataContext context, UserManager<User> userManager,
+        IOptions<CloudinarySettings> cloudinaryConfiguration)
     {
-        private readonly DataContext _context;
-        private readonly UserManager<User> _userManager;
-        private readonly Cloudinary _cloudinary;
+        _context = context;
+        _userManager = userManager;
 
-        public AdminController(DataContext context, UserManager<User> userManager,
-            IOptions<CloudinarySettings> cloudinaryConfiguration)
-        {
-            _context = context;
-            _userManager = userManager;
+        var account = new Account(cloudinaryConfiguration.Value.CloudName, cloudinaryConfiguration.Value.ApiKey,
+            cloudinaryConfiguration.Value.ApiSecret);
 
-            var account = new Account(cloudinaryConfiguration.Value.CloudName, cloudinaryConfiguration.Value.ApiKey,
-                cloudinaryConfiguration.Value.ApiSecret);
+        _cloudinary = new Cloudinary(account);
+    }
 
-            _cloudinary = new Cloudinary(account);
-        }
-
-        [Authorize(Policy = "RequireAdminRole")]
-        [HttpGet("usersWithRoles")]
-        public async Task<IActionResult> GetUsersWithRoles()
-        {
-            var userList = await _context.Users.OrderBy(x => x.UserName)
-                .Select(user => new
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Roles = (from userRole in user.UserRoles
-                        join role in _context.Roles
-                            on userRole.RoleId
-                            equals role.Id
-                        select role.Name).ToList()
-                }).ToListAsync();
-
-            return Ok(userList);
-        }
-
-        [Authorize(Policy = "RequireAdminRole")]
-        [HttpPost("editRoles/{userName}")]
-        public async Task<IActionResult> EditRoles(string userName, RoleEditDto roleEditDto)
-        {
-            var user = await _userManager.FindByNameAsync(userName);
-            var userRoles = await _userManager.GetRolesAsync(user);
-            var selectedRoles = roleEditDto.RoleNames;
-            // null coalescing operator ??
-            selectedRoles ??= new string[] { };
-            var result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
-
-            if (!result.Succeeded)
-                return BadRequest("Failed to add to roles.");
-
-            result = await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles));
-
-            if (!result.Succeeded)
-                return BadRequest("Failed to remove the roles");
-
-            return Ok(await _userManager.GetRolesAsync(user));
-        }
-
-        [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpGet("photosForModeration")]
-        public async Task<IActionResult> GetPhotosForModeration()
-        {
-            var photos = await _context.Photos.Include(u => u.User)
-                .IgnoreQueryFilters()
-                .Where(p => p.IsApproved == false)
-                .Select(u => new
-                {
-                    Id = u.Id,
-                    UserName = u.User.UserName,
-                    Url = u.Url,
-                    IsApproved = u.IsApproved
-                }).ToListAsync();
-
-            return Ok(photos);
-        }
-
-        [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpPost("approvePhoto/{photoId}")]
-        public async Task<IActionResult> ApprovePhoto(int photoId)
-        {
-            var photo = await GetPhotoById(photoId);
-
-            photo.IsApproved = true;
-
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
-        [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpPost("rejectPhoto/{photoId}")]
-        public async Task<IActionResult> RejectPhoto(int photoId)
-        {
-            var photo = await GetPhotoById(photoId);
-
-            if (photo.IsMain)
-                return BadRequest("You cannot reject the main photo.");
-
-            if (photo.PublicId != null)
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpGet("usersWithRoles")]
+    public async Task<IActionResult> GetUsersWithRoles()
+    {
+        var userList = await _context.Users.OrderBy(x => x.UserName)
+            .Select(user => new
             {
-                var deletionParams = new DeletionParams(photo.PublicId);
-                var result = await _cloudinary.DestroyAsync(deletionParams);
+                Id = user.Id,
+                UserName = user.UserName,
+                Roles = (from userRole in user.UserRoles
+                    join role in _context.Roles
+                        on userRole.RoleId
+                        equals role.Id
+                    select role.Name).ToList()
+            }).ToListAsync();
 
-                if (result.Result == "ok")
-                    _context.Photos.Remove(photo);
-            }
+        return Ok(userList);
+    }
 
-            if (photo.PublicId == null)
-                _context.Photos.Remove(photo);
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpPost("editRoles/{userName}")]
+    public async Task<IActionResult> EditRoles(string userName, RoleEditDto roleEditDto)
+    {
+        var user = await _userManager.FindByNameAsync(userName);
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var selectedRoles = roleEditDto.RoleNames;
+        // null coalescing operator ??
+        selectedRoles ??= new string[] { };
+        var result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
 
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
+        if (!result.Succeeded)
+            return BadRequest("Failed to add to roles.");
 
-        private async Task<Photo> GetPhotoById(int photoId)
+        result = await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles));
+
+        if (!result.Succeeded)
+            return BadRequest("Failed to remove the roles");
+
+        return Ok(await _userManager.GetRolesAsync(user));
+    }
+
+    [Authorize(Policy = "ModeratePhotoRole")]
+    [HttpGet("photosForModeration")]
+    public async Task<IActionResult> GetPhotosForModeration()
+    {
+        var photos = await _context.Photos.Include(u => u.User)
+            .IgnoreQueryFilters()
+            .Where(p => p.IsApproved == false)
+            .Select(u => new
+            {
+                Id = u.Id,
+                UserName = u.User.UserName,
+                Url = u.Url,
+                IsApproved = u.IsApproved
+            }).ToListAsync();
+
+        return Ok(photos);
+    }
+
+    [Authorize(Policy = "ModeratePhotoRole")]
+    [HttpPost("approvePhoto/{photoId:int}")]
+    public async Task<IActionResult> ApprovePhoto(int photoId)
+    {
+        var photo = await GetPhotoById(photoId);
+
+        photo.IsApproved = true;
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [Authorize(Policy = "ModeratePhotoRole")]
+    [HttpPost("rejectPhoto/{photoId:int}")]
+    public async Task<IActionResult> RejectPhoto(int photoId)
+    {
+        var photo = await GetPhotoById(photoId);
+
+        if (photo.IsMain)
+            return BadRequest("You cannot reject the main photo.");
+
+        if (photo.PublicId != null)
         {
-            var photo = await _context.Photos.IgnoreQueryFilters()
-                .FirstOrDefaultAsync(p => p.Id == photoId);
-            return photo;
+            var deletionParams = new DeletionParams(photo.PublicId);
+            var result = await _cloudinary.DestroyAsync(deletionParams);
+
+            if (result.Result == "ok")
+                _context.Photos.Remove(photo);
         }
+
+        if (photo.PublicId == null)
+            _context.Photos.Remove(photo);
+
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+
+    private async Task<Photo> GetPhotoById(int photoId)
+    {
+        var photo = await _context.Photos.IgnoreQueryFilters()
+            .FirstOrDefaultAsync(p => p.Id == photoId);
+        return photo;
     }
 }

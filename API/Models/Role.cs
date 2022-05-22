@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
-namespace API.Models
+namespace API.Models;
+
+public class Role : IdentityRole<int>
 {
-    public class Role : IdentityRole<int>
-    {
-        public virtual ICollection<UserRole> UserRoles { get; set; }
-    }
+    public virtual ICollection<UserRole> UserRoles { get; set; }
 }

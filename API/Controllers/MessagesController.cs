@@ -9,142 +9,141 @@ using API.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.Controllers;
+
+[ServiceFilter(typeof(LogUserActivity))]
+[Route("api/users/{userId:int}/[controller]")]
+[ApiController]
+public class MessagesController : ControllerBase
 {
-    [ServiceFilter(typeof(LogUserActivity))]
-    [Route("api/users/{userId}/[controller]")]
-    [ApiController]
-    public class MessagesController : ControllerBase
+    private readonly IDatingRepository _repository;
+    private readonly IMapper _mapper;
+
+    public MessagesController(IDatingRepository repository, IMapper mapper)
     {
-        private readonly IDatingRepository _repository;
-        private readonly IMapper _mapper;
-
-        public MessagesController(IDatingRepository repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+        _repository = repository;
+        _mapper = mapper;
+    }
         
-        private bool IsUnauthorized(int userId)
-        {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return true;
-            return false;
-        }
+    private bool IsUnauthorized(int userId)
+    {
+        if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            return true;
+        return false;
+    }
 
-        // GET api/users/{userId}/messages
-        [HttpGet("{id}", Name = "GetMessage")]
-        public async Task<IActionResult> GetMessage(int userId, int id)
-        {
-            if (IsUnauthorized(userId)) 
-                return Unauthorized();
+    // GET api/users/{userId}/messages
+    [HttpGet("{id}", Name = "GetMessage")]
+    public async Task<IActionResult> GetMessage(int userId, int id)
+    {
+        if (IsUnauthorized(userId)) 
+            return Unauthorized();
 
-            var messageFromRepository = await _repository.GetMessage(id);
+        var messageFromRepository = await _repository.GetMessage(id);
 
-            if (messageFromRepository == null)
-                return NotFound();
+        if (messageFromRepository == null)
+            return NotFound();
 
-            return Ok(messageFromRepository);
-        }
+        return Ok(messageFromRepository);
+    }
         
-        // GET api/users/{userId}/messages
-        [HttpGet]
-        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery] MessageParams messageParams)
+    // GET api/users/{userId}/messages
+    [HttpGet]
+    public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery] MessageParams messageParams)
+    {
+        if (IsUnauthorized(userId))
+            return Unauthorized();
+
+        messageParams.UserId = userId;
+
+        var messagesFromRepository = await _repository.GetMessagesForUser(messageParams);
+        var messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepository);
+
+        Response.AddPagination(messagesFromRepository.CurrentPage, messagesFromRepository.PageSize,
+            messagesFromRepository.TotalCount, messagesFromRepository.TotalPages);
+
+        return Ok(messages);
+    }
+
+    // GET api/users/{userId}/messages/thread/{recipientId}
+    [HttpGet("thread/{recipientId:int}")]
+    public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
+    {
+        if (IsUnauthorized(userId))
+            return Unauthorized();
+
+        var messageFromRepository = await _repository.GetMessageThread(userId, recipientId);
+        var messageThread = _mapper.Map<IEnumerable<MessageToReturnDto>>(messageFromRepository);
+
+        return Ok(messageThread);
+    }
+
+    // POST api/users/{userId}/messages
+    [HttpPost]
+    public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDto messageForCreationDto)
+    {
+        var sender = await _repository.GetUser(userId, false);
+
+        if (IsUnauthorized(sender.Id))
+            return Unauthorized();
+
+        messageForCreationDto.SenderId = userId;
+        var recipient = await _repository.GetUser(messageForCreationDto.RecipientId, false);
+
+        if (recipient == null)
+            return BadRequest("Could not find user");
+
+        var message = _mapper.Map<Message>(messageForCreationDto);
+        _repository.Add(message);
+
+        if (await _repository.SaveAll())
         {
-            if (IsUnauthorized(userId))
-                return Unauthorized();
-
-            messageParams.UserId = userId;
-
-            var messagesFromRepository = await _repository.GetMessagesForUser(messageParams);
-            var messages = _mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepository);
-
-            Response.AddPagination(messagesFromRepository.CurrentPage, messagesFromRepository.PageSize,
-                messagesFromRepository.TotalCount, messagesFromRepository.TotalPages);
-
-            return Ok(messages);
+            var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
+            return CreatedAtRoute("GetMessage", new {userId, Id = message.Id}, messageToReturn);
         }
 
-        // GET api/users/{userId}/messages/thread/{recipientId}
-        [HttpGet("thread/{recipientId}")]
-        public async Task<IActionResult> GetMessageThread(int userId, int recipientId)
-        {
-            if (IsUnauthorized(userId))
-                return Unauthorized();
+        throw new Exception("Failed to save");
+    }
 
-            var messageFromRepository = await _repository.GetMessageThread(userId, recipientId);
-            var messageThread = _mapper.Map<IEnumerable<MessageToReturnDto>>(messageFromRepository);
+    [HttpPost("{id:int}")]
+    public async Task<IActionResult> DeleteMessage(int id, int userId)
+    {
+        if (IsUnauthorized(userId))
+            return Unauthorized();
 
-            return Ok(messageThread);
-        }
+        var messageFromRepository = await _repository.GetMessage(id);
 
-        // POST api/users/{userId}/messages
-        [HttpPost]
-        public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDto messageForCreationDto)
-        {
-            var sender = await _repository.GetUser(userId, false);
+        if (messageFromRepository.SenderId == userId)
+            messageFromRepository.SenderDeleted = true;
 
-            if (IsUnauthorized(sender.Id))
-                return Unauthorized();
+        if (messageFromRepository.RecipientId == userId)
+            messageFromRepository.RecipientDeleted = true;
 
-            messageForCreationDto.SenderId = userId;
-            var recipient = await _repository.GetUser(messageForCreationDto.RecipientId, false);
+        if (messageFromRepository.SenderDeleted && messageFromRepository.RecipientDeleted)
+            _repository.Delete(messageFromRepository);
 
-            if (recipient == null)
-                return BadRequest("Could not find user");
-
-            var message = _mapper.Map<Message>(messageForCreationDto);
-            _repository.Add(message);
-
-            if (await _repository.SaveAll())
-            {
-                var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
-                return CreatedAtRoute("GetMessage", new {userId, Id = message.Id}, messageToReturn);
-            }
-
-            throw new Exception("Failed to save");
-        }
-
-        [HttpPost("{id}")]
-        public async Task<IActionResult> DeleteMessage(int id, int userId)
-        {
-            if (IsUnauthorized(userId))
-                return Unauthorized();
-
-            var messageFromRepository = await _repository.GetMessage(id);
-
-            if (messageFromRepository.SenderId == userId)
-                messageFromRepository.SenderDeleted = true;
-
-            if (messageFromRepository.RecipientId == userId)
-                messageFromRepository.RecipientDeleted = true;
-
-            if (messageFromRepository.SenderDeleted && messageFromRepository.RecipientDeleted)
-                _repository.Delete(messageFromRepository);
-
-            if (await _repository.SaveAll())
-                return NoContent();
-
-            throw new Exception("Error deleting the message");
-        }
-
-        [HttpPost("{id}/read")]
-        public async Task<IActionResult> MarkMessageAsRead(int userId, int id)
-        {
-            if (IsUnauthorized(userId))
-                return Unauthorized();
-
-            var message = await _repository.GetMessage(id);
-
-            if (message.RecipientId != userId)
-                return Unauthorized();
-
-            message.IsRead = true;
-            message.DateRead = DateTime.Now;
-
-            await _repository.SaveAll();
-
+        if (await _repository.SaveAll())
             return NoContent();
-        }
+
+        throw new Exception("Error deleting the message");
+    }
+
+    [HttpPost("{id:int}/read")]
+    public async Task<IActionResult> MarkMessageAsRead(int userId, int id)
+    {
+        if (IsUnauthorized(userId))
+            return Unauthorized();
+
+        var message = await _repository.GetMessage(id);
+
+        if (message.RecipientId != userId)
+            return Unauthorized();
+
+        message.IsRead = true;
+        message.DateRead = DateTime.Now;
+
+        await _repository.SaveAll();
+
+        return NoContent();
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace API.Dtos
-{
-    public class MessageForCreationDto
-    {
-        public int SenderId { get; set; }
-        public int RecipientId { get; set; }
-        public DateTime MessageSent { get; set; }
-        public string Content { get; set; }
+namespace API.Dtos;
 
-        public MessageForCreationDto()
-        {
-            MessageSent = DateTime.Now;
-        }
+public class MessageForCreationDto
+{
+    public int SenderId { get; set; }
+    public int RecipientId { get; set; }
+    public DateTime MessageSent { get; set; }
+    public string Content { get; set; }
+
+    public MessageForCreationDto()
+    {
+        MessageSent = DateTime.Now;
     }
 }
