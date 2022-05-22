@@ -51,68 +51,65 @@ export function tokenGetter() {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavComponent,
-    HomeComponent,
-    RegisterComponent,
-    MemberListComponent,
-    ListsComponent,
-    MessagesComponent,
-    MemberCardComponent,
-    MemberDetailComponent,
-    MemberEditComponent,
-    PhotoEditorComponent,
-    MemberMessagesComponent,
-    AdminPanelComponent,
-    HasRoleDirective,
-    UserManagementComponent,
-    PhotoManagementComponent,
-    RolesModalComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    BsDropdownModule.forRoot(),
-    BsDatepickerModule.forRoot(),
-    PaginationModule.forRoot(),
-    TabsModule.forRoot(),
-    ButtonsModule.forRoot(),
-    TimeagoModule.forRoot(),
-    RouterModule.forRoot(appRoutes),
-    ModalModule.forRoot(),
-    NgxGalleryModule,
-    FileUploadModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter,
-        whitelistedDomains: ['localhost:5000'],
-        blacklistedRoutes: ['localhost:5000/api/auth']
-      }
-    })
-  ],
-  providers: [
-    AuthService,
-    ErrorInterceptorProvider,
-    AlertifyService,
-    AuthGuard,
-    UserService,
-    MemberDetailResolver,
-    MemberListResolver,
-    MemberEditResolver,
-    PreventUnsavedChanges,
-    ListsResolver,
-    MessagesResolver,
-    AdminService
-  ],
-  entryComponents: [
-    RolesModalComponent
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        NavComponent,
+        HomeComponent,
+        RegisterComponent,
+        MemberListComponent,
+        ListsComponent,
+        MessagesComponent,
+        MemberCardComponent,
+        MemberDetailComponent,
+        MemberEditComponent,
+        PhotoEditorComponent,
+        MemberMessagesComponent,
+        AdminPanelComponent,
+        HasRoleDirective,
+        UserManagementComponent,
+        PhotoManagementComponent,
+        RolesModalComponent
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        BsDropdownModule.forRoot(),
+        BsDatepickerModule.forRoot(),
+        PaginationModule.forRoot(),
+        TabsModule.forRoot(),
+        ButtonsModule.forRoot(),
+        TimeagoModule.forRoot(),
+        RouterModule.forRoot(appRoutes),
+        ModalModule.forRoot(),
+        NgxGalleryModule,
+        FileUploadModule,
+        JwtModule.forRoot({
+            config: {
+                tokenGetter,
+                whitelistedDomains: ['localhost:5000'],
+                blacklistedRoutes: ['localhost:5000/api/auth']
+            }
+        })
+    ],
+    providers: [
+        AuthService,
+        ErrorInterceptorProvider,
+        AlertifyService,
+        AuthGuard,
+        UserService,
+        MemberDetailResolver,
+        MemberListResolver,
+        MemberEditResolver,
+        PreventUnsavedChanges,
+        ListsResolver,
+        MessagesResolver,
+        AdminService
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }
