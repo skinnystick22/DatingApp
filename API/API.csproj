@@ -1,27 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <UserSecretsId>b183094d-2124-40ca-92e2-d5b1876ca9e4</UserSecretsId>
+        <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
-        <PackageReference Include="CloudinaryDotNet" Version="1.13.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.18" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="CloudinaryDotNet" Version="1.17.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
-        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.18.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.18.0" />
     </ItemGroup>
 
     <ItemGroup>
